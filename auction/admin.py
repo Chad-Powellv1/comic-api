@@ -1,13 +1,13 @@
 from django.contrib import admin
 from .models import (
- AuctionStatus,
- Contributor,
- Auction,
- Detail,
- Review,
- Role,
- Item,
- Bid,
+    AuctionStatus,
+    Contributor,
+    Auction,
+    Detail,
+    Review,
+    Role,
+    Item,
+    Bid,
 )
 
 admin.site.register(AuctionStatus)
