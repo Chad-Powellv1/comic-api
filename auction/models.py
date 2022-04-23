@@ -147,11 +147,11 @@ class Detail(models.Model):
         (FAIR, 'F'),
         (POOR, 'P'),
     ]
-    grade = models.CharField(
-        max_length=5, choices=CGC_GRADING_SCALE, null=True)
+    grade = models.CharField(null=True,
+        max_length=5, choices=CGC_GRADING_SCALE)
 
     def __str__(self):
-        return self.cover_date
+        return str(self.cover_date)
 
 
 class Item(models.Model):
@@ -164,8 +164,6 @@ class Item(models.Model):
 
 
 class Auction(models.Model):
-    title = models.CharField(max_length=200, null=False)
-    description = models.CharField(max_length=200, null=False)
     open_date = models.DateTimeField(auto_now_add=True, null=False)
     close_date = models.DateTimeField(null=False)
     minimum_bid = MoneyField(
@@ -175,7 +173,7 @@ class Auction(models.Model):
     items = models.ManyToManyField(Item)
 
     def __str__(self):
-        return self.title
+        return str(self.minimum_bid)
 
 
 class Bid(models.Model):
