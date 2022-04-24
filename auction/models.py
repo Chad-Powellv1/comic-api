@@ -47,15 +47,15 @@ class Role(models.Model):
         (EDITOR,  'Editor'),
         (CREATED_BY, 'Created By'),
     ]
-    con_role = models.CharField(max_length=12, choices=ROLES, null=True)
+    con_role = models.CharField(max_length=12, choices=ROLES,blank=True)
 
     def __str__(self):
         return self.con_role
 
 
 class Contributor(models.Model):
-    first_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50, null=True)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     role = models.ManyToManyField(Role)
 
     def __str__(self):
@@ -77,7 +77,7 @@ class Detail(models.Model):
     issue_number = models.IntegerField(null=False)
     variant = models.BooleanField(null=False, default=False)
     virgin_cover = models.BooleanField(null=False, default=False)
-    characters = models.CharField(max_length=200, null=True)
+    characters = models.CharField(max_length=200, null=True,blank=True)
     BRONZE_AGE = 'Bronze Age'
     COPPER_AGE = 'Copper Age'
     GOLDEN_AGE = 'Golden Age'
@@ -93,7 +93,7 @@ class Detail(models.Model):
         (PLATINUM_AGE, 'Platinum Age'),
         (SILVER_AGE, 'Silver Age'),
     ]
-    choice = models.CharField(null=True, max_length=12, choices=ERA)
+    choice = models.CharField(max_length=12, choices=ERA,blank=True)
     GEM_MINT = 'GM'
     MINT = 'M'
     NEAR_MINT_MINT = 'NM/M'
@@ -147,7 +147,7 @@ class Detail(models.Model):
         (FAIR, 'F'),
         (POOR, 'P'),
     ]
-    grade = models.CharField(null=True,
+    grade = models.CharField(blank=True,
         max_length=5, choices=CGC_GRADING_SCALE)
 
     def __str__(self):
