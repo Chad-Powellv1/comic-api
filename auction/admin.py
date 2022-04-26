@@ -1,7 +1,14 @@
-from django.contrib import admin
 from .models import AuctionStatus, Contributor, Auction
 from .models import Detail, Review, Role, Item, Bid
+from django.contrib import admin
+from .models import CustomUser
 
+
+class CustomUserAdmin(admin.ModelAdmin):
+    model = CustomUser
+
+
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(AuctionStatus)
 admin.site.register(Contributor)
 admin.site.register(Auction)
