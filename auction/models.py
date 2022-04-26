@@ -1,8 +1,14 @@
-import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from djmoney.models.fields import MoneyField
+from django.conf import settings
+from django.db import models
+import datetime
+
+
+class CustomUser(AbstractUser):
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.email}"
 
 
 class AuctionStatus(models.Model):
@@ -22,7 +28,7 @@ class AuctionStatus(models.Model):
         verbose_name_plural = 'Action Status'
 
     def __str__(self):
-        return self.choice
+        return f"{self.choice}"
 
 
 class Role(models.Model):
@@ -50,7 +56,7 @@ class Role(models.Model):
     con_role = models.CharField(max_length=12, choices=ROLES,blank=True)
 
     def __str__(self):
-        return self.con_role
+        return f"{self.con_role}"
 
 
 class Contributor(models.Model):
@@ -59,7 +65,7 @@ class Contributor(models.Model):
     role = models.ManyToManyField(Role)
 
     def __str__(self):
-        return self.last_name
+        return f"{self.first_name} {self.last_name}"
 
 
 def current_year():
@@ -151,7 +157,7 @@ class Detail(models.Model):
         max_length=5, choices=CGC_GRADING_SCALE)
 
     def __str__(self):
-        return str(self.cover_date)
+        return f"{str(self.cover_date)}, Publisher: {self.publisher}, Issue Number: {self.issue_number}, Characters: {self.characters}, Era: {self.ERA}"
 
 
 class Item(models.Model):
@@ -160,7 +166,7 @@ class Item(models.Model):
     details = models.ManyToManyField(Detail)
 
     def __str__(self):
-        return self.title
+        return f"Title: {self.title}, Contributor: {self.contributors}, Details: {self.details}"
 
 
 class Auction(models.Model):
@@ -168,12 +174,12 @@ class Auction(models.Model):
     close_date = models.DateTimeField(null=False)
     minimum_bid = MoneyField(
         max_digits=12, decimal_places=2, default_currency='USD')
-    seller = models.ManyToManyField(User)
+    seller = models.ManyToManyField(CustomUser)
     auction_status = models.ManyToManyField(AuctionStatus)
     items = models.ManyToManyField(Item)
 
     def __str__(self):
-        return str(self.minimum_bid)
+        return f"Open date: {self.open_date}, Close date: {self.close_date}, Min bid: {str(self.minimum_bid)}"
 
 
 class Bid(models.Model):
@@ -181,10 +187,10 @@ class Bid(models.Model):
                             default_currency='USD', null=False)
     bid_time = models.DateTimeField(auto_now_add=True, null=False)
     auction = models.ManyToManyField(Auction)
-    bidder = models.ManyToManyField(User)
+    bidder = models.ManyToManyField(CustomUser)
 
     def __str__(self):
-        return self.bid_amount
+        return f"Bid amount: {self.bid_amount}, Bid time: {self.bid_time}"
 
 
 class Review(models.Model):
@@ -206,7 +212,7 @@ class Review(models.Model):
     rate = models.IntegerField(choices=STARS, null=False)
     comment = models.CharField(max_length=200, null=True)
     review_date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.number_stars
+        return f" Rate: {self.rate}"
