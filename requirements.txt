@@ -22,9 +22,11 @@ defusedxml==0.7.1
 dill==0.3.4
 distlib==0.3.4
 Django==4.0.4
+django-cors-headers==3.11.0
 django-filter==21.1
 django-money==2.1.1
 djangorestframework==3.13.1
+djangorestframework-simplejwt==5.1.0
 docutils==0.18.1
 entrypoints==0.4
 executing==0.8.3
@@ -82,6 +84,7 @@ pycparser==2.21
 pydocstyle==6.1.1
 pyflakes==2.4.0
 Pygments==2.11.2
+PyJWT==2.3.0
 pylama==8.3.8
 pylint==2.13.4
 pyparsing==3.0.7
