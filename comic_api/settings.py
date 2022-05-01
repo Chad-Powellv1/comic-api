@@ -60,6 +60,12 @@ INSTALLED_APPS = [
     'auction',
 ]
 
+# Absolute filesystem path to the directory for user-uploaded files
+MEDIA_URL = "/media/"
+
+# URL we can use in our templates for the files
+MEDIA_ROOT = BASE_DIR / "media"
+
 SITE_ID = 1
 
 MIDDLEWARE = [

@@ -69,6 +69,7 @@ pbr==5.8.1
 pep8==1.7.1
 pexpect==4.8.0
 pickleshare==0.7.5
+Pillow==9.1.0
 pipenv==2022.3.28
 pkginfo==1.8.2
 platformdirs==2.5.1

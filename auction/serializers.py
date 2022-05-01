@@ -1,7 +1,10 @@
-from .models import AuctionStatus, Contributor, Auction, Detail, Review, Role, Item, Bid
+from .models import AuctionStatus, Contributor, Auction, Detail, Review, Role, Item, Bid, Image
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import CustomUser
+
+# API url 
+URL = 'https://chadpowellv1-comicapi-tiv0x3tc1cg.ws-us43.gitpod.io/'
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -35,16 +38,19 @@ class ContributorSerializer(serializers.ModelSerializer):
         model = Contributor
         fields = ('first_name', 'last_name', 'role')
 
+
 class AuctionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auction
         fields = ('open_date', 'close_date', 'minimum_bid', 'seller',
          'auction_status', 'items')
 
+
 class DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Detail
-        fields = ('cover_date', 'publisher', 'issue_number, variant', 'virgin_cover', 'characters', 'choice', 'grade')
+        fields = ('cover_date', 'publisher', 'issue_number', 'variant', 'virgin_cover', 'characters', 'choice', 'grade')
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,12 +58,53 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('rate', 'comment', 'review_date')
 
 class RoleSerializer(serializers.ModelSerializer):
+    WRITER = 'Writer'
+    ARTIST = 'Artist'
+    PENCILLER = 'Penciller'
+    INKER = 'Inker'
+    COLORIST = 'Colorist'
+    COVER_ARTIST = 'Cover Artist'
+    LETTERER = 'Letterer'
+    EDITOR = 'Editor'
+    CREATED_BY = 'Created By'
+    CON_CHOICES = [ 
+        (WRITER, 'Writer'),
+        (ARTIST, 'Artist'),
+        (PENCILLER, 'Penciller'),
+        (INKER, 'Inker'),
+        (COLORIST, 'Colorist'),
+        (COVER_ARTIST, 'Cover Artist'),
+        (LETTERER, 'Letterer'),
+        (EDITOR,  'Editor'),
+        (CREATED_BY, 'Created By'),
+    ]
+    choices = serializers.ChoiceField(
+        choices = CON_CHOICES)
+
+    multiplechoices = serializers.MultipleChoiceField(
+        choices = CON_CHOICES)
+
+
+
+class BidSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Role
-        fields = ('con_role')
+        model = Bid
+        fields = ('bid_amount', 'bid_time', 'auction', 'bidder')
+
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ('bid_amount', 'bid_time','auction', 'bidder')
+        fields = ('title', 'contributors','details')
 
+
+class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField('get_cover_image_url')
+
+    class Meta:
+        model = Image
+        field = 'cover_image'
+
+    def get_cover_image_url(self, obj):
+        if obj.cover_image:
+            return URL + obj.cover_image.url
