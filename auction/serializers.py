@@ -13,7 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'password', 'first_name', 'last_name')
+        fields = ('id','email', 'username', 'password', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -38,12 +38,13 @@ class ContributorSerializer(serializers.ModelSerializer):
 class AuctionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auction
-        fields = ('open_date', 'close_date', 'minimum_bid', 'seller', 'auction_status', 'items')
+        fields = ('open_date', 'close_date', 'minimum_bid', 'seller',
+         'auction_status', 'items')
 
 class DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Detail
-        fields = ('cover_date','publisher', 'issue_number','variant','virgin_cover','characters','choice','grade')
+        fields = ('cover_date', 'publisher', 'issue_number, variant', 'virgin_cover', 'characters', 'choice', 'grade')
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,9 +59,5 @@ class RoleSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ('title','contributors','details')
-
-class BidSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Bid
         fields = ('bid_amount', 'bid_time','auction', 'bidder')
+
