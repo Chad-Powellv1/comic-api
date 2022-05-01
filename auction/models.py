@@ -68,6 +68,9 @@ class Contributor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
+class Image(models.Model):
+    cover_image = models.ImageField(null=False, upload_to='images/')
+
 def current_year():
     return datetime.date.today().year
 
@@ -84,6 +87,7 @@ class Detail(models.Model):
     variant = models.BooleanField(null=False, default=False)
     virgin_cover = models.BooleanField(null=False, default=False)
     characters = models.CharField(max_length=200, null=True,blank=True)
+    cover_image = models.ForeignKey(Image, models.CASCADE)
     BRONZE_AGE = 'Bronze Age'
     COPPER_AGE = 'Copper Age'
     GOLDEN_AGE = 'Golden Age'
