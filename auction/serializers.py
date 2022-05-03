@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import CustomUser
 
 # API url 
-URL = 'https://chadpowellv1-comicapi-tiv0x3tc1cg.ws-us43.gitpod.io/'
+URL = 'https://8000-chadpowellv1-comicapi-tiv0x3tc1cg.ws-us43.gitpod.io'
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -31,7 +31,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class AuctionStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuctionStatus
-        fields = ('choice')
+        fields = ('choice',)
 
 class ContributorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,6 +44,7 @@ class AuctionSerializer(serializers.ModelSerializer):
         model = Auction
         fields = ('open_date', 'close_date', 'minimum_bid', 'seller',
          'auction_status', 'items')
+        depth = 3
 
 
 class DetailSerializer(serializers.ModelSerializer):
@@ -57,33 +58,12 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ('rate', 'comment', 'review_date')
 
+        
 class RoleSerializer(serializers.ModelSerializer):
-    WRITER = 'Writer'
-    ARTIST = 'Artist'
-    PENCILLER = 'Penciller'
-    INKER = 'Inker'
-    COLORIST = 'Colorist'
-    COVER_ARTIST = 'Cover Artist'
-    LETTERER = 'Letterer'
-    EDITOR = 'Editor'
-    CREATED_BY = 'Created By'
-    CON_CHOICES = [ 
-        (WRITER, 'Writer'),
-        (ARTIST, 'Artist'),
-        (PENCILLER, 'Penciller'),
-        (INKER, 'Inker'),
-        (COLORIST, 'Colorist'),
-        (COVER_ARTIST, 'Cover Artist'),
-        (LETTERER, 'Letterer'),
-        (EDITOR,  'Editor'),
-        (CREATED_BY, 'Created By'),
-    ]
-    choices = serializers.ChoiceField(
-        choices = CON_CHOICES)
+    role = serializers.ChoiceField(choices=Role.ROLES)
 
-    multiplechoices = serializers.MultipleChoiceField(
-        choices = CON_CHOICES)
-
+    class Meta: 
+        Model = Role
 
 
 class BidSerializer(serializers.ModelSerializer):
@@ -99,11 +79,11 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField('get_cover_image_url')
+    cover_image = serializers.SerializerMethodField('get_cover_image_url')
 
     class Meta:
         model = Image
-        field = 'cover_image'
+        fields = ('cover_image',)
 
     def get_cover_image_url(self, obj):
         if obj.cover_image:

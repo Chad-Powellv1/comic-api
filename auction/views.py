@@ -1,6 +1,6 @@
-from .serializers import AuctionStatusSerializer, ContributorSerializer, AuctionSerializer, DetailSerializer
+from .serializers import AuctionStatusSerializer, ContributorSerializer, AuctionSerializer, DetailSerializer, ImageSerializer
 from .serializers import ReviewSerializer, RoleSerializer, ItemSerializer, BidSerializer, CustomUserSerializer
-from .models import AuctionStatus, Contributor, Auction, Detail, Review, Role, Item, Bid, CustomUser
+from .models import AuctionStatus, Contributor, Auction, Detail, Review, Role, Item, Bid, CustomUser, Image
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django_filters.rest_framework import DjangoFilterBackend
@@ -117,4 +117,12 @@ class BidViewSet(viewsets.ModelViewSet):
     filterset_fields = ['id', 'bid_amount', 'bid_time']
     search_fields = ['=bid_amount', '=bid_time']
     ordering = ['id']
+
+class ImageViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint with all items
+    """
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+  
 
