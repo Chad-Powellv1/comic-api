@@ -42,7 +42,7 @@ class ContributorSerializer(serializers.ModelSerializer):
 class AuctionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auction
-        fields = ('open_date', 'close_date', 'minimum_bid', 'seller',
+        fields = ('id','open_date', 'close_date', 'minimum_bid', 'seller',
          'auction_status', 'items')
         depth = 3
 
@@ -64,6 +64,7 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta: 
         Model = Role
+        fields = ('con_role')
 
 
 class BidSerializer(serializers.ModelSerializer):
