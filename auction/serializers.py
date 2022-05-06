@@ -2,6 +2,7 @@ from .models import AuctionStatus, Contributor, Auction, Detail, Review, Role, I
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import CustomUser
+from datetime import datetime
 
 # API url 
 URL = 'https://8000-chadpowellv1-comicapi-tiv0x3tc1cg.ws-us43.gitpod.io'
@@ -40,11 +41,18 @@ class ContributorSerializer(serializers.ModelSerializer):
 
 
 class AuctionSerializer(serializers.ModelSerializer):
+    # open_date = serializers.SerializerMethodField('format_time')
+    close_date = serializers.SerializerMethodField('format_time')
+
     class Meta:
         model = Auction
         fields = ('id','open_date', 'close_date', 'minimum_bid', 'seller',
          'auction_status', 'items')
         depth = 3
+
+    def format_time(self,obj):
+        return obj.close_date.strftime("%f")
+    
 
 
 class DetailSerializer(serializers.ModelSerializer):
