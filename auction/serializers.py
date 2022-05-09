@@ -5,7 +5,8 @@ from .models import CustomUser
 from datetime import datetime
 
 # API url 
-URL = 'https://8000-chadpowellv1-comicapi-tiv0x3tc1cg.ws-us43.gitpod.io'
+URL = 'https://8000-chadpowellv1-comicapi-tiv0x3tc1cg.ws-us44.gitpod.io'
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -19,6 +20,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id','email', 'username', 'password', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True}}
+
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -50,8 +52,6 @@ class AuctionSerializer(serializers.ModelSerializer):
          'auction_status', 'items')
         depth = 3
 
-    def format_time(self,obj):
-        return obj.close_date.strftime("%f")
     
 
 
