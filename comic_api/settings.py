@@ -33,10 +33,10 @@ AUTH_USER_MODEL = "auction.CustomUser"
 
 CORS_ALLOW_ALL_ORIGINS = True # insecure but necessary for now.
 
-CORS_ALLOWED_ORIGINS = [    
-    'http://localhost:8000',
-    'https://*.gitpod.io'
-]
+# CORS_ALLOWED_ORIGINS = [    
+#     'http://localhost:8000',
+#     'https://*.gitpod.io'
+# ]
 # Application definition
 
 INSTALLED_APPS = [
