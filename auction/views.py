@@ -8,12 +8,15 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework import permissions, status, generics, viewsets
+from django.shortcuts import get_object_or_404
 
-
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 
 class UserCreate(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
+    # authentication_classes = ()
 
     def post(self, request, format='json'):
         serializer = CustomUserSerializer(data=request.data)
@@ -24,10 +27,12 @@ class UserCreate(APIView):
                 return Response(json, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class UserDetail(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
 
 
 class AuctionStatusViewSet(viewsets.ModelViewSet):
@@ -61,9 +66,11 @@ class AuctionViewSet(viewsets.ModelViewSet):
     queryset = Auction.objects.all()
     serializer_class = AuctionSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id', 'open_date', 'close_date', 'minimum_bid', 'items']
+    filterset_fields = ['id', 'open_date',
+                        'close_date', 'minimum_bid', 'items']
     search_fields = ['=open_date', '=close_date', '=minimum_bid', '=items']
     ordering = ['id']
+
 
 class DetailViewSet(viewsets.ModelViewSet):
     """
@@ -72,9 +79,11 @@ class DetailViewSet(viewsets.ModelViewSet):
     queryset = Detail.objects.all()
     serializer_class = DetailSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id', 'publisher', 'variant', 'virgin_cover', 'characters', 'choice', 'grade']
+    filterset_fields = ['id', 'publisher', 'variant',
+                        'virgin_cover', 'characters', 'choice', 'grade']
     search_fields = ['=publisher', '=characters']
     ordering = ['id']
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     """
@@ -82,6 +91,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     """
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
 
 class RoleViewSet(viewsets.ModelViewSet):
     """
@@ -118,12 +128,21 @@ class BidViewSet(viewsets.ModelViewSet):
     search_fields = ['=bid_amount', '=bid_time']
     ordering = ['id']
 
-    def create_bid(self,request):
-        user_id = request.data.append('bidder')
-        bid_amount = request.data.append('bid_amount')
-        auction = request.data.append('auction')
 
-        
+class HighestBidViewSet(generics.RetrieveAPIView):
+    #  Bid.objects.filter(auction=6).order_by('-bid_amount').first()
+    serializer_class = BidSerializer
+
+    def my_view(request):
+        username = None
+        if request.user.is_authenticated():
+            username = request.user.username
+
+    def get_object(self):
+        pk = self.kwargs['pk']
+        return Bid.objects.filter(
+            auction=pk).order_by('-bid_amount').first()
+
 
 class ImageViewSet(viewsets.ModelViewSet):
     """
@@ -131,5 +150,3 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-  
-
