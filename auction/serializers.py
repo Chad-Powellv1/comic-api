@@ -20,8 +20,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id','email', 'username', 'password', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True}}
-
-
+        
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)  # as long as the fields are the same, we can just use this
@@ -29,6 +28,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+    def get_user_detail(self,obj):
+        return CustomUserSerializer(obj.user).data.username
 
 
 class AuctionStatusSerializer(serializers.ModelSerializer):
@@ -43,16 +45,12 @@ class ContributorSerializer(serializers.ModelSerializer):
 
 
 class AuctionSerializer(serializers.ModelSerializer):
-    # open_date = serializers.SerializerMethodField('format_time')
-    close_date = serializers.SerializerMethodField('format_time')
 
     class Meta:
         model = Auction
         fields = ('id','open_date', 'close_date', 'minimum_bid', 'seller',
          'auction_status', 'items')
         depth = 3
-
-    
 
 
 class DetailSerializer(serializers.ModelSerializer):
@@ -80,6 +78,15 @@ class BidSerializer(serializers.ModelSerializer):
         model = Bid
         fields = ('bid_amount', 'bid_time', 'auction', 'bidder')
 
+class BidWithUserDetail(serializers.ModelSerializer):
+    user_detail = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Bid
+        fields = ('bid_amount', 'bid_time', 'auction', 'bidder')
+
+    def get_user_detail(self,obj):
+        return CustomUserSerializer(obj.user).data
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -97,3 +104,4 @@ class ImageSerializer(serializers.ModelSerializer):
     def get_cover_image_url(self, obj):
         if obj.cover_image:
             return URL + obj.cover_image.url
+

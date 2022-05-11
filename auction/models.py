@@ -1,6 +1,8 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
 from djmoney.models.fields import MoneyField
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.conf import settings
 from django.db import models
 import datetime

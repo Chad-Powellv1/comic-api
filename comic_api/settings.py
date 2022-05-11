@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Louisville'
+TIME_ZONE = 'America/Kentucky/Louisville'
 
 USE_I18N = True
 

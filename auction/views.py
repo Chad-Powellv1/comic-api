@@ -118,6 +118,13 @@ class BidViewSet(viewsets.ModelViewSet):
     search_fields = ['=bid_amount', '=bid_time']
     ordering = ['id']
 
+    def create_bid(self,request):
+        user_id = request.data.append('bidder')
+        bid_amount = request.data.append('bid_amount')
+        auction = request.data.append('auction')
+
+        
+
 class ImageViewSet(viewsets.ModelViewSet):
     """
     API endpoint with all items
