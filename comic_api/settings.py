@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +27,16 @@ SECRET_KEY = 'django-insecure-^mq-m*^l$m!v6i3(d+7d=0vg#z%b$2-eu3qwf5kqx4n7t4#uaq
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']
+CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']# Custom user model
 
+AUTH_USER_MODEL = "auction.CustomUser"
+
+CORS_ALLOW_ALL_ORIGINS = True # insecure but necessary for now.
+
+CORS_ALLOWED_ORIGINS = [    
+    'http://localhost:8000',
+    'https://*.gitpod.io'
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,10 +46,30 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+    # 3rd Party Apps
+    'rest_framework.authtoken',
+    'django.contrib.sites',
+    'django_filters',
+    'rest_framework',
+    'corsheaders',
+    'djmoney',
+
+    # Local Apps
+    'auction',
 ]
 
+# Absolute filesystem path to the directory for user-uploaded files
+MEDIA_URL = "/media/"
+
+# URL we can use in our templates for the files
+MEDIA_ROOT = BASE_DIR / "media"
+
+SITE_ID = 1
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Kentucky/Louisville'
 
 USE_I18N = True
 
@@ -126,3 +155,31 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ), 
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend'], 
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
+
