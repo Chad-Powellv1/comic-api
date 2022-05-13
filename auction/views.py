@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = CustomUserSerializer(many=True)
 
 class UserCreate(APIView):
     permission_classes = (permissions.AllowAny,)

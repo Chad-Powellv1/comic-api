@@ -13,7 +13,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True
     )
-
     username = serializers.CharField()
     password = serializers.CharField(min_length=8, write_only=True)
 
@@ -76,17 +75,11 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class BidSerializer(serializers.ModelSerializer):
+    auction = CustomForeignKeyField(queryset=Auction.objects.all(), serializer=AuctionSerializer)
+    bidder = CustomForeignKeyField(queryset=CustomUser.objects.all(), serializer=CustomUserSerializer)
     class Meta:
         model = Bid
-        fields = ('bid_amount', 'bid_time', 'auction', 'bidder')
-
-
-class BidWithUserDetail(serializers.ModelSerializer):
-    user_detail = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Bid
-        fields = ('bid_amount', 'bid_time', 'auction', 'bidder')
+        fields = '__all__'
 
 
 class ItemSerializer(serializers.ModelSerializer):

@@ -192,8 +192,8 @@ class Bid(models.Model):
     bid_amount = MoneyField(max_digits=12, decimal_places=2,
                             default_currency='USD', null=False)
     bid_time = models.DateTimeField(auto_now_add=True, null=False)
-    auction = models.ManyToManyField(Auction)
-    bidder = models.ManyToManyField(CustomUser)
+    auction = models.ForeignKey(Auction, on_delete=models.PROTECT, null=True)
+    bidder = models.ForeignKey(CustomUser, on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return f"Bid amount: {self.bid_amount}, Bid time: {self.bid_time}"
