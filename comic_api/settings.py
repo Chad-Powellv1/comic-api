@@ -27,6 +27,14 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('SECRET_KEY')
 
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_URL = os.environ.get('AWS_URL')
+AWS_DEFAULT_ACL = None
+AWS_S3_REGION_NAME = 'us-east-1'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -36,13 +44,14 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io', 'https://*.herokuapp.com']# Custom user model
+CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io',
+                        'https://*.herokuapp.com']  # Custom user model
 
 AUTH_USER_MODEL = "auction.CustomUser"
 
-CORS_ALLOW_ALL_ORIGINS = True # insecure but necessary for now.
+CORS_ALLOW_ALL_ORIGINS = True  # insecure but necessary for now.
 
-# CORS_ALLOWED_ORIGINS = [    
+# CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:8000',
 #     'https://*.gitpod.io'
 # ]
@@ -64,6 +73,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'djmoney',
+    'storages',
 
     # Local Apps
     'auction',
@@ -114,7 +124,7 @@ WSGI_APPLICATION = 'comic_api.wsgi.application'
 
 
 DATABASES = {
-  "default": env.db("DATABASE_URL", default='postgres://postgres:postgres@127.0.0.1:5432/postgres')
+    "default": env.db("DATABASE_URL", default='postgres://postgres:postgres@127.0.0.1:5432/postgres')
 }
 
 
@@ -165,11 +175,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ), 
+    ),
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend'], 
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 SIMPLE_JWT = {
@@ -186,3 +196,10 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATIC_URL = AWS_URL + '/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_URL = AWS_URL + '/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

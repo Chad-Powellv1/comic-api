@@ -5,9 +5,6 @@ from .models import CustomUser
 from datetime import datetime
 from .fields import CustomForeignKeyField
 
-# API url
-URL = 'https://8000-chadpowellv1-comicapi-tiv0x3tc1cg.ws-us44.gitpod.io'
-
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -75,8 +72,11 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class BidSerializer(serializers.ModelSerializer):
-    auction = CustomForeignKeyField(queryset=Auction.objects.all(), serializer=AuctionSerializer)
-    bidder = CustomForeignKeyField(queryset=CustomUser.objects.all(), serializer=CustomUserSerializer)
+    auction = CustomForeignKeyField(
+        queryset=Auction.objects.all(), serializer=AuctionSerializer)
+    bidder = CustomForeignKeyField(
+        queryset=CustomUser.objects.all(), serializer=CustomUserSerializer)
+
     class Meta:
         model = Bid
         fields = '__all__'
@@ -89,12 +89,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    cover_image = serializers.SerializerMethodField('get_cover_image_url')
 
     class Meta:
         model = Image
         fields = ('cover_image',)
-
-    def get_cover_image_url(self, obj):
-        if obj.cover_image:
-            return URL + obj.cover_image.url
