@@ -1,2 +1,2 @@
-web: python manage.py runserver 0.0.0.0:$PORT
+web: gunicorn comic_api.wsgi
 release: python manage.py migrate
